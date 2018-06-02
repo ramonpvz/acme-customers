@@ -1,7 +1,6 @@
 package com.acme.customers.lib.v1.common;
 
-import java.sql.Date;
-import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * Created by ramon pvazquez on 3/22/2018.
