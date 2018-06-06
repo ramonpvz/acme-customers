@@ -1,24 +1,15 @@
 package com.acme.customers.api.rest.v1.resources;
 
-import com.acme.customers.api.rest.v1.services.exceptions.EmptyPayloadException;
-import com.acme.customers.api.rest.v1.services.exceptions.ResourceNotFoundException;
 import com.acme.customers.api.services.CustomerService;
 import com.acme.customers.lib.v1.Customer;
-import com.acme.customers.lib.v1.CustomerStatus;
-import com.acme.customers.lib.v1.response.CustomerList;
+import org.apache.catalina.logger.SystemOutLogger;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.sql.DataSource;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by ramon pvazquez on 3/20/2018.
@@ -32,10 +23,21 @@ public class CustomerResource {
     @Inject
     private CustomerService customerService;
 
+    @DELETE
+    @Path("/{id}")
+    public Response deleteCustomer(@PathParam("id") String id) throws SQLException {
+        System.out.println("deleteCustomer");
+        customerService.deleteCustomerById(id);
+
+        return Response.noContent().build();
+
+    }
+
     @GET
     public Response getCustomers(@QueryParam("limit") Integer limit,
                                  @QueryParam("offset") Integer offset) throws SQLException {
 
+        System.out.println("getCustomers");
         return Response.ok(customerService.findCustomers(limit, offset)).header("X-Total-Count", 0).build();
 
     }
@@ -44,6 +46,7 @@ public class CustomerResource {
     @Path("/{id}")
     public Response getCustomer(@PathParam("id") String id) throws SQLException {
 
+        System.out.println("getCustomer");
         return Response.ok(customerService.findCustomerById(id)).build();
 
     }
@@ -51,6 +54,7 @@ public class CustomerResource {
     @POST
     public Response createCustomer(Customer newCustomer) throws SQLException {
 
+        System.out.println("createCustomer");
         return Response.ok(customerService.createCustomer(newCustomer)).build();
 
     }
@@ -60,16 +64,6 @@ public class CustomerResource {
     public Response updateCustomer(@PathParam("id") String id, Customer updateCustomer) throws SQLException {
 
         return  Response.ok(customerService.updateCustomer(id, updateCustomer)).build();
-
-    }
-
-    @DELETE
-    @Path("/{id}")
-    public Response deleteCustomer(@PathParam("id") String id) throws SQLException {
-
-        customerService.deleteCustomerById(id);
-
-        return Response.noContent().build();
 
     }
 
